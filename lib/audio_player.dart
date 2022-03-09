@@ -1,0 +1,55 @@
+import 'dart:async';
+
+import 'package:audioplayers/audioplayers.dart';
+
+class AudioAssetPlayer {
+  final String filename;
+  final progressStreamController = StreamController<double>();
+
+  late final AudioPlayer audioPlayer;
+  late final StreamSubscription progressSubscription;
+  late final num audioDurationMS;
+
+  Stream<double> get progressStream => progressStreamController.stream;
+
+  Stream<PlayerState> get stateStream => audioPlayer.onPlayerStateChanged;
+
+  AudioAssetPlayer(this.filename);
+
+  Future<void> int() async {
+    audioPlayer = await AudioCache().play(filename);
+
+    // avoid bug - the duration returned = 0
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    audioDurationMS = await audioPlayer.getDuration();
+
+    // avoid audio automatically played
+    await audioPlayer.stop();
+
+    // first state: 0 ms played
+    progressStreamController.add(0.0);
+
+    // update progress bar
+    progressSubscription =
+        audioPlayer.onAudioPositionChanged.listen((duration) {
+      return progressStreamController
+          .add(duration.inMilliseconds / audioDurationMS);
+    });
+  }
+
+  Future<void> dispose() => Future.wait([
+        audioPlayer.dispose(),
+        progressSubscription.cancel(),
+        progressStreamController.close(),
+      ]);
+
+  Future<void> play() => audioPlayer.resume();
+
+  Future<void> pause() => audioPlayer.pause();
+
+  Future<void> reset() async {
+    await audioPlayer.stop();
+    progressStreamController.add(0.0);
+  }
+}
