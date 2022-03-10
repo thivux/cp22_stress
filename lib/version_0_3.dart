@@ -1,12 +1,54 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: Bubble(),
-  ));
+void main() => runApp(const FirstPageApp());
+
+class FirstPageApp extends StatelessWidget {
+  const FirstPageApp({Key? key}) : super(key: key);
+  static List<Tab> myTabs = <Tab>[
+    Tab(
+        icon: Image.asset(
+          'assets/breathing.png',
+          height: 32,
+          width: 32,
+        )),
+    Tab(
+        icon: Image.asset(
+          'assets/listening.png',
+          height: 32,
+          width: 32,
+        )),
+    Tab(icon: Image.asset('assets/Numbers_4_icon.png')),
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.pink,
+      ),
+      home: DefaultTabController(
+        length: myTabs.length,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Stress reduce method'),
+            bottom: TabBar(
+              tabs: myTabs,
+            ),
+          ),
+          body: const TabBarView(
+            children: [
+              Bubble(),
+              Text('Tab two'),
+              Text('Tab three'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class Bubble extends StatefulWidget {
+  const Bubble({Key? key}) : super(key: key);
   @override
   BubbleState createState() {
     return BubbleState();
@@ -22,31 +64,31 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
     super.initState();
 
     _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 10));
+        AnimationController(vsync: this, duration: const Duration(seconds: 10));
 
     _marginAnimation = TweenSequence(<TweenSequenceItem<double>>[
       TweenSequenceItem(
-          // inhale 1
+        // inhale 1
           tween: Tween<double>(begin: 100, end: 40),
           weight: 1.5),
       TweenSequenceItem(
-          // stop
+        // stop
           tween: Tween<double>(begin: 40, end: 40),
           weight: 1),
       TweenSequenceItem(
-          // inhale 2
+        // inhale 2
           tween: Tween<double>(begin: 40, end: 30),
           weight: 1),
       TweenSequenceItem(
-          // stop
+        // stop
           tween: Tween<double>(begin: 30, end: 30),
           weight: 1),
       TweenSequenceItem(
-          // exhale
+        // exhale
           tween: Tween<double>(begin: 30, end: 100),
           weight: 7),
       TweenSequenceItem(
-          // stop
+        // stop
           tween: Tween<double>(begin: 100, end: 100),
           weight: 2),
     ]).animate(_controller);
@@ -70,8 +112,8 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
     return showDialog(
         context: context,
         builder: (context) {
-          return Dialog(
-            child: Container(
+          return const Dialog(
+            child: SizedBox(
               width: 300,
               height: 300,
               child: Center(
@@ -93,29 +135,16 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
         animation: _controller,
         builder: (BuildContext context, _) {
           return Scaffold(
-            body: Center(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    width: 500,
-                    height: 500,
-                    // color: Colors.red,   // uncomment to see container
-                    child: Container(
-                      margin: EdgeInsets.all(_marginAnimation.value),
-                      decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        _playAnimation();
-                      },
-                      child: Text('Start'))
-                ],
-                mainAxisAlignment: MainAxisAlignment.center,
-              ),
+            body: Column(
+              children: <Widget>[
+                CircleBox(marginAnimation: _marginAnimation),
+                ElevatedButton(
+                    onPressed: () {
+                      _playAnimation();
+                    },
+                    child: const Text('Start'))
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
@@ -125,5 +154,34 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
             ),
           );
         });
+  }
+}
+
+class CircleBox extends StatelessWidget {
+  const CircleBox({
+    Key? key,
+    required Animation<double> marginAnimation,
+  })  : _marginAnimation = marginAnimation,
+        super(key: key);
+
+  final Animation<double> _marginAnimation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+        alignment: const Alignment(0, -1),
+        child: SizedBox(
+          width: 280,
+          height: 300,
+          // color: Colors.red,   // uncomment to see container
+          child: Container(
+            margin: EdgeInsets.all(_marginAnimation.value),
+            decoration: const BoxDecoration(
+              color: Colors.pinkAccent,
+              shape: BoxShape.circle,
+            ),
+          ),
+        )
+    );
   }
 }
