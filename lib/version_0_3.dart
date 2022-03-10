@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'nsdr.dart';
 void main() => runApp(const FirstPageApp());
 
 class FirstPageApp extends StatelessWidget {
@@ -37,7 +37,7 @@ class FirstPageApp extends StatelessWidget {
           body: const TabBarView(
             children: [
               Bubble(),
-              Text('Tab two'),
+              NSDR(),
               Text('Tab three'),
             ],
           ),
