@@ -181,7 +181,7 @@ class NSDRState extends State<NSDR> {
               height: 300,
               child: Center(
                 child: Text(
-                  ' Hít vào 2 lần liên tiếp \n khi bong bóng nở to \n rồi thở ra từ từ khi bong \n bóng thu nhỏ lại.',
+                  'Nghe audio và cảm nhận',
                   style: TextStyle(
                     fontSize: 25,
                   ),

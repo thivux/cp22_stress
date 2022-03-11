@@ -21,27 +21,27 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
 
     _marginAnimation = TweenSequence(<TweenSequenceItem<double>>[
       TweenSequenceItem(
-        // inhale 1
+          // inhale 1
           tween: Tween<double>(begin: 100, end: 40),
           weight: 1.5),
       TweenSequenceItem(
-        // stop
+          // stop
           tween: Tween<double>(begin: 40, end: 40),
           weight: 1),
       TweenSequenceItem(
-        // inhale 2
+          // inhale 2
           tween: Tween<double>(begin: 40, end: 30),
           weight: 1),
       TweenSequenceItem(
-        // stop
+          // stop
           tween: Tween<double>(begin: 30, end: 30),
           weight: 1),
       TweenSequenceItem(
-        // exhale
+          // exhale
           tween: Tween<double>(begin: 30, end: 100),
           weight: 7),
       TweenSequenceItem(
-        // stop
+          // stop
           tween: Tween<double>(begin: 100, end: 100),
           weight: 2),
     ]).animate(_controller);
@@ -110,7 +110,6 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
   }
 }
 
-
 class CircleBox extends StatelessWidget {
   const CircleBox({
     Key? key,
@@ -135,7 +134,6 @@ class CircleBox extends StatelessWidget {
               shape: BoxShape.circle,
             ),
           ),
-        )
-    );
+        ));
   }
 }
