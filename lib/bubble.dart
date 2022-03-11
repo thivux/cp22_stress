@@ -1,51 +1,4 @@
 import 'package:flutter/material.dart';
-import 'nsdr.dart';
-void main() => runApp(const FirstPageApp());
-
-class FirstPageApp extends StatelessWidget {
-  const FirstPageApp({Key? key}) : super(key: key);
-  static List<Tab> myTabs = <Tab>[
-    Tab(
-        icon: Image.asset(
-          'assets/breathing.png',
-          height: 32,
-          width: 32,
-        )),
-    Tab(
-        icon: Image.asset(
-          'assets/listening.png',
-          height: 32,
-          width: 32,
-        )),
-    Tab(icon: Image.asset('assets/Numbers_4_icon.png')),
-  ];
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.pink,
-      ),
-      home: DefaultTabController(
-        length: myTabs.length,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Stress reduce method'),
-            bottom: TabBar(
-              tabs: myTabs,
-            ),
-          ),
-          body: const TabBarView(
-            children: [
-              Bubble(),
-              NSDR(),
-              Text('Tab three'),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class Bubble extends StatefulWidget {
   const Bubble({Key? key}) : super(key: key);
@@ -142,7 +95,7 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
                     onPressed: () {
                       _playAnimation();
                     },
-                    child: const Text('Start'))
+                    child: const Text('Bắt đầu'))
               ],
               mainAxisAlignment: MainAxisAlignment.start,
             ),
@@ -156,6 +109,7 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
         });
   }
 }
+
 
 class CircleBox extends StatelessWidget {
   const CircleBox({
@@ -171,8 +125,8 @@ class CircleBox extends StatelessWidget {
     return Align(
         alignment: const Alignment(0, -1),
         child: SizedBox(
-          width: 280,
-          height: 300,
+          width: 350,
+          height: 380,
           // color: Colors.red,   // uncomment to see container
           child: Container(
             margin: EdgeInsets.all(_marginAnimation.value),
