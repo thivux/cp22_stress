@@ -22,7 +22,7 @@ class NSDR extends StatefulWidget {
 class NSDRState extends State<NSDR> {
   static const iconSize = 50.0;
 
-  final player = AudioAssetPlayer('Entrelosdos.mp3');
+  final player = AudioAssetPlayer('nsdr.mp3');
 
   // stuff need getting update: state & progress
   late final StreamSubscription progressSubscription;
@@ -77,7 +77,7 @@ class NSDRState extends State<NSDR> {
                           style: Theme
                               .of(context)
                               .textTheme
-                              .headline4
+                              .headline5
                       ),
 
                       Row(
