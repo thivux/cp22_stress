@@ -57,51 +57,39 @@ class NSDRState extends State<NSDR> {
       // backgroundColor: Colors.blue[100],
       body: Center(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: FutureBuilder<void>(
-              future: initFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return const Text('loading');
-                }
+        padding: const EdgeInsets.all(16.0),
+        child: FutureBuilder<void>(
+          future: initFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Text('loading');
+            }
 
-                return Container(
-                  // color: Colors.blue[100],
-                  // elevation: 3.0,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                          'Non-Sleep Deep Rest',
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .headline5
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          buildPlayButton(),
-                          buildPauseButton(),
-                          buildStopButton(),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: LinearProgressIndicator(
-                          value: progress,
-                        ),
-                      ),
-                    ],
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Non-Sleep Deep Rest',
+                    style: Theme.of(context).textTheme.headline5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    buildPlayButton(),
+                    buildPauseButton(),
+                    buildStopButton(),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: LinearProgressIndicator(
+                    value: progress,
                   ),
-
-                );
-              },
-            ),
-          )
-      ),
+                ),
+              ],
+            );
+          },
+        ),
+      )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           createDialog(context);
