@@ -93,13 +93,20 @@ class NSDRState extends State<NSDR> {
                         child: LinearProgressIndicator(
                           value: progress,
                         ),
-                      )
+                      ),
                     ],
                   ),
+
                 );
               },
             ),
           )
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          createDialog(context);
+        },
+        child: const Text('?'),
       ),
     );
   }
@@ -125,23 +132,23 @@ class NSDRState extends State<NSDR> {
   }
 
   Widget buildPauseButton() {
-      if (state == PlayerState.PAUSED) {
-        return const IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.pause,
-              color: Colors.grey,
-              size: iconSize,
-            ));
-      }
-
-      return IconButton(
-          onPressed: player.pause,
-          icon: const Icon(
+    if (state == PlayerState.PAUSED) {
+      return const IconButton(
+          onPressed: null,
+          icon: Icon(
             Icons.pause,
             color: Colors.grey,
             size: iconSize,
           ));
+    }
+
+    return IconButton(
+        onPressed: player.pause,
+        icon: const Icon(
+          Icons.pause,
+          color: Colors.grey,
+          size: iconSize,
+        ));
   }
 
   Widget buildStopButton() {
@@ -163,5 +170,25 @@ class NSDRState extends State<NSDR> {
           size: iconSize,
         ));
   }
-}
 
+  createDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return const Dialog(
+            child: SizedBox(
+              width: 300,
+              height: 300,
+              child: Center(
+                child: Text(
+                  ' Hít vào 2 lần liên tiếp \n khi bong bóng nở to \n rồi thở ra từ từ khi bong \n bóng thu nhỏ lại.',
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+}

@@ -118,7 +118,7 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
               height: 300,
               child: Center(
                 child: Text(
-                  'hit vao 2 lan, tho ra 1 lan\ntho ik!!!',
+                  ' Hít vào 2 lần liên tiếp \n khi bong bóng nở to \n rồi thở ra từ từ khi bong \n bóng thu nhỏ lại.',
                   style: TextStyle(
                     fontSize: 25,
                   ),
