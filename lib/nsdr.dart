@@ -166,10 +166,11 @@ class NSDRState extends State<NSDR> {
           return const Dialog(
             child: SizedBox(
               width: 300,
-              height: 300,
+              height: 420,
               child: Center(
                 child: Text(
-                  'Nghe audio và cảm nhận',
+                  '- NSDR một đoạn ghi âm, lắng nghe đoạn ghi âm \n- Tác dụng của phương pháp đến cơ thể: thư giãn nhanh và sâu, thay thế giấc ngủ đã mất, ngủ trở lại nếu thức dậy giữa chừng lúc nửa đêm \n'
+                      '- Nguồn khoa học nghiên cứu (trích): published by Front Psychiatry (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6361823/)',
                   style: TextStyle(
                     fontSize: 25,
                   ),

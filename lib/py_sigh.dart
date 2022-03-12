@@ -115,10 +115,12 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
           return const Dialog(
             child: SizedBox(
               width: 300,
-              height: 300,
+              height: 420,
               child: Center(
                 child: Text(
-                  ' Hít vào 2 lần liên tiếp \n khi bong bóng nở to \n rồi thở ra từ từ khi bong \n bóng thu nhỏ lại.',
+                  ' -Physiological sigh: là phương pháp thở vào 2 lần thật nhanh và mạnh rồi thở ra từ từ \n'
+                  '-Tác dụng: giúp bạn thở có chủ đích, bình tĩnh lại và cân bằng lại cảm xúc ngay lúc thở \n'
+                '-Nguồn khoa học: https://scopeblog.stanford.edu/2020/10/07/how-stress-affects-your-brain-and-how-to-reverse-it/',
                   style: TextStyle(
                     fontSize: 25,
                   ),
