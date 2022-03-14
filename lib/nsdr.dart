@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'audio_player.dart';
 
+// test nsdr
 void main() {
   runApp(const MaterialApp(
     home: NSDR(),
@@ -166,11 +167,11 @@ class NSDRState extends State<NSDR> {
           return const Dialog(
             child: SizedBox(
               width: 300,
-              height: 420,
+              height: 350,
               child: Center(
                 child: Text(
-                  '- NSDR một đoạn ghi âm, lắng nghe đoạn ghi âm \n- Tác dụng của phương pháp đến cơ thể: thư giãn nhanh và sâu, thay thế giấc ngủ đã mất, ngủ trở lại nếu thức dậy giữa chừng lúc nửa đêm \n'
-                      '- Nguồn khoa học nghiên cứu (trích): published by Front Psychiatry (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6361823/)',
+                  '- Lắng nghe và làm theo chỉ dẫn trong đoạn ghi âm \n\n- Tác dụng: giúp bạn thư giãn nhanh và sâu, chìm vào giấc ngủ hoặc ngủ trở lại nếu thức dậy giữa chừng lúc nửa đêm, có thể dùng để thay thế giấc ngủ đã mất\n',
+                      // '- Nguồn khoa học nghiên cứu (trích): published by Front Psychiatry (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6361823/)',
                   style: TextStyle(
                     fontSize: 25,
                   ),

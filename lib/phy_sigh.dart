@@ -1,51 +1,4 @@
 import 'package:flutter/material.dart';
-import 'nsdr.dart';
-void main() => runApp(const FirstPageApp());
-
-class FirstPageApp extends StatelessWidget {
-  const FirstPageApp({Key? key}) : super(key: key);
-  static List<Tab> myTabs = <Tab>[
-    Tab(
-        icon: Image.asset(
-          'assets/breathing.png',
-          height: 32,
-          width: 32,
-        )),
-    Tab(
-        icon: Image.asset(
-          'assets/listening.png',
-          height: 32,
-          width: 32,
-        )),
-    Tab(icon: Image.asset('assets/Numbers_4_icon.png')),
-  ];
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.pink,
-      ),
-      home: DefaultTabController(
-        length: myTabs.length,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Stress reduce method'),
-            bottom: TabBar(
-              tabs: myTabs,
-            ),
-          ),
-          body: const TabBarView(
-            children: [
-              Bubble(),
-              NSDR(),
-              Text('Tab three'),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class Bubble extends StatefulWidget {
   const Bubble({Key? key}) : super(key: key);
@@ -115,11 +68,11 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
           return const Dialog(
             child: SizedBox(
               width: 300,
-              height: 300,
+              height: 380,
               child: Center(
                 child: Text(
-                  ' -Physiological sigh: là phương pháp thở vào 2 lần thật nhanh và mạnh rồi thở ra từ từ \n\n'
-                  ' -Tác dụng: giúp bạn thở có chủ đích, bình tĩnh lại và cân bằng lại cảm xúc ngay lúc thở \n\n',
+                  '\n-Physiological sigh: hít vào một hơi thật nhanh và mạnh, ních thêm chút nữa khi bong bóng nở ra rồi thở ra từ từ khi bong bóng xẹp lại\n\n'
+                  ' -Tác dụng: khiến phổi bạn nở ra và nhịp tim chậm lại, giúp bạn bình tĩnh và cân bằng cảm xúc ngay lúc thở \n\n',
                 // ' -Nguồn khoa học: https://scopeblog.stanford.edu/2020/10/07/how-stress-affects-your-brain-and-how-to-reverse-it/',
                   style: TextStyle(
                     fontSize: 25,
@@ -144,7 +97,7 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
                     onPressed: () {
                       _playAnimation();
                     },
-                    child: const Text('Start'))
+                    child: const Text('Bắt đầu'))
               ],
               mainAxisAlignment: MainAxisAlignment.start,
             ),
@@ -173,8 +126,8 @@ class CircleBox extends StatelessWidget {
     return Align(
         alignment: const Alignment(0, -1),
         child: SizedBox(
-          width: 280,
-          height: 300,
+          width: 350,
+          height: 380,
           // color: Colors.red,   // uncomment to see container
           child: Container(
             margin: EdgeInsets.all(_marginAnimation.value),
