@@ -118,7 +118,9 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
               height: 300,
               child: Center(
                 child: Text(
-                  'hit vao 2 lan, tho ra 1 lan\ntho ik!!!',
+                  ' -Physiological sigh: là phương pháp thở vào 2 lần thật nhanh và mạnh rồi thở ra từ từ \n\n'
+                  ' -Tác dụng: giúp bạn thở có chủ đích, bình tĩnh lại và cân bằng lại cảm xúc ngay lúc thở \n\n',
+                // ' -Nguồn khoa học: https://scopeblog.stanford.edu/2020/10/07/how-stress-affects-your-brain-and-how-to-reverse-it/',
                   style: TextStyle(
                     fontSize: 25,
                   ),

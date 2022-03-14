@@ -57,49 +57,44 @@ class NSDRState extends State<NSDR> {
       // backgroundColor: Colors.blue[100],
       body: Center(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: FutureBuilder<void>(
-              future: initFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return const Text('loading');
-                }
+        padding: const EdgeInsets.all(16.0),
+        child: FutureBuilder<void>(
+          future: initFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Text('loading');
+            }
 
-                return Container(
-                  // color: Colors.blue[100],
-                  // elevation: 3.0,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                          'Non-Sleep Deep Rest',
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .headline5
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          buildPlayButton(),
-                          buildPauseButton(),
-                          buildStopButton(),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: LinearProgressIndicator(
-                          value: progress,
-                        ),
-                      )
-                    ],
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Non-Sleep Deep Rest',
+                    style: Theme.of(context).textTheme.headline5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    buildPlayButton(),
+                    buildPauseButton(),
+                    buildStopButton(),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: LinearProgressIndicator(
+                    value: progress,
                   ),
-                );
-              },
-            ),
-          )
+                ),
+              ],
+            );
+          },
+        ),
+      )),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          createDialog(context);
+        },
+        child: const Text('?'),
       ),
     );
   }
@@ -125,23 +120,23 @@ class NSDRState extends State<NSDR> {
   }
 
   Widget buildPauseButton() {
-      if (state == PlayerState.PAUSED) {
-        return const IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.pause,
-              color: Colors.grey,
-              size: iconSize,
-            ));
-      }
-
-      return IconButton(
-          onPressed: player.pause,
-          icon: const Icon(
+    if (state == PlayerState.PAUSED) {
+      return const IconButton(
+          onPressed: null,
+          icon: Icon(
             Icons.pause,
             color: Colors.grey,
             size: iconSize,
           ));
+    }
+
+    return IconButton(
+        onPressed: player.pause,
+        icon: const Icon(
+          Icons.pause,
+          color: Colors.grey,
+          size: iconSize,
+        ));
   }
 
   Widget buildStopButton() {
@@ -163,5 +158,26 @@ class NSDRState extends State<NSDR> {
           size: iconSize,
         ));
   }
-}
 
+  createDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return const Dialog(
+            child: SizedBox(
+              width: 300,
+              height: 420,
+              child: Center(
+                child: Text(
+                  '- NSDR một đoạn ghi âm, lắng nghe đoạn ghi âm \n- Tác dụng của phương pháp đến cơ thể: thư giãn nhanh và sâu, thay thế giấc ngủ đã mất, ngủ trở lại nếu thức dậy giữa chừng lúc nửa đêm \n'
+                      '- Nguồn khoa học nghiên cứu (trích): published by Front Psychiatry (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6361823/)',
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+}
