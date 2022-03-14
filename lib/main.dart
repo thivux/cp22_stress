@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'nsdr.dart';
-import 'bubble.dart';
-
+import 'phy_sigh.dart';
 void main() => runApp(const FirstPageApp());
 
 class FirstPageApp extends StatelessWidget {
@@ -19,9 +18,7 @@ class FirstPageApp extends StatelessWidget {
           height: 32,
           width: 32,
         )),
-    // Tab(icon: Image.asset('assets/Numbers_4_icon.png')),
   ];
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -41,7 +38,6 @@ class FirstPageApp extends StatelessWidget {
             children: [
               Bubble(),
               NSDR(),
-              // Text('Tab three'),
             ],
           ),
         ),
@@ -49,4 +45,3 @@ class FirstPageApp extends StatelessWidget {
     );
   }
 }
-
