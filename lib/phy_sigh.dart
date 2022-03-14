@@ -1,4 +1,51 @@
 import 'package:flutter/material.dart';
+import 'nsdr.dart';
+void main() => runApp(const FirstPageApp());
+
+class FirstPageApp extends StatelessWidget {
+  const FirstPageApp({Key? key}) : super(key: key);
+  static List<Tab> myTabs = <Tab>[
+    Tab(
+        icon: Image.asset(
+          'assets/breathing.png',
+          height: 32,
+          width: 32,
+        )),
+    Tab(
+        icon: Image.asset(
+          'assets/listening.png',
+          height: 32,
+          width: 32,
+        )),
+    Tab(icon: Image.asset('assets/Numbers_4_icon.png')),
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.pink,
+      ),
+      home: DefaultTabController(
+        length: myTabs.length,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Stress reduce method'),
+            bottom: TabBar(
+              tabs: myTabs,
+            ),
+          ),
+          body: const TabBarView(
+            children: [
+              Bubble(),
+              NSDR(),
+              Text('Tab three'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class Bubble extends StatefulWidget {
   const Bubble({Key? key}) : super(key: key);
@@ -71,7 +118,9 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
               height: 300,
               child: Center(
                 child: Text(
-                  'hit vao 2 lan, tho ra 1 lan\ntho ik!!!',
+                  ' -Physiological sigh: là phương pháp thở vào 2 lần thật nhanh và mạnh rồi thở ra từ từ \n\n'
+                  ' -Tác dụng: giúp bạn thở có chủ đích, bình tĩnh lại và cân bằng lại cảm xúc ngay lúc thở \n\n',
+                // ' -Nguồn khoa học: https://scopeblog.stanford.edu/2020/10/07/how-stress-affects-your-brain-and-how-to-reverse-it/',
                   style: TextStyle(
                     fontSize: 25,
                   ),
@@ -95,7 +144,7 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
                     onPressed: () {
                       _playAnimation();
                     },
-                    child: const Text('Bắt đầu'))
+                    child: const Text('Start'))
               ],
               mainAxisAlignment: MainAxisAlignment.start,
             ),
@@ -109,7 +158,6 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
         });
   }
 }
-
 
 class CircleBox extends StatelessWidget {
   const CircleBox({
@@ -125,8 +173,8 @@ class CircleBox extends StatelessWidget {
     return Align(
         alignment: const Alignment(0, -1),
         child: SizedBox(
-          width: 350,
-          height: 380,
+          width: 280,
+          height: 300,
           // color: Colors.red,   // uncomment to see container
           child: Container(
             margin: EdgeInsets.all(_marginAnimation.value),
