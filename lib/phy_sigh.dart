@@ -124,12 +124,12 @@ class CircleBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-        alignment: const Alignment(0, -1),
+        alignment: const Alignment(0, 1),
         child: SizedBox(
           width: 350,
           height: 400,
-          // color: Colors.red,   // uncomment to see container
           child: Container(
+          // color: Colors.blue,   // uncomment to see container
             margin: EdgeInsets.all(_marginAnimation.value),
             decoration: const BoxDecoration(
               color: Colors.pinkAccent,

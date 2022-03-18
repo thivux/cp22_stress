@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'audio_player.dart';
+import 'alarm.dart';
 
 // test nsdr
 void main() {
@@ -23,7 +25,9 @@ class NSDR extends StatefulWidget {
 class NSDRState extends State<NSDR> {
   static const iconSize = 50.0;
 
-  final player = AudioAssetPlayer('nsdr.mp3');
+  final nsdrPlayer = AudioAssetPlayer('nsdr.mp3');
+  // final nsdrPlayer = AudioAssetPlayer('alarm.wav');
+  AudioAssetPlayer alarmPlayer = AudioAssetPlayer('alarm.wav');
 
   // stuff need getting update: state & progress
   late final StreamSubscription progressSubscription;
@@ -36,61 +40,93 @@ class NSDRState extends State<NSDR> {
 
   @override
   void initState() {
-    initFuture = player.int().then((_) {
+    initFuture = nsdrPlayer.init().then((_) {
+      alarmPlayer.init();
       progressSubscription =
-          player.progressStream.listen((p) => setState(() => progress = p));
+          nsdrPlayer.progressStream.listen((p) => setState(() => progress = p));
       stateSubscription =
-          player.stateStream.listen((s) => setState(() => state = s));
+          nsdrPlayer.stateStream.listen((s) => setState(() => state = s));
+      // print('fuck you: ' + progress.toString()); -> only gets called once
     });
-
     super.initState();
   }
 
   @override
   void dispose() {
-    player.dispose();
+    nsdrPlayer.dispose();
+    alarmPlayer.dispose();
     super.dispose();
   }
+
+  AlarmSwitch alarmSwitch = AlarmSwitch();
+
+  // print('alarm being called');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Colors.blue[100],
       body: Center(
-          child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: FutureBuilder<void>(
-          future: initFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Text('loading');
-            }
+        // child: Padding(
+        child: Column(
+          // padding: const EdgeInsets.all(16.0),
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(20),
+            ),
+            Container(
+              padding: const EdgeInsets.all(20.0),
+              child: alarmSwitch,
+            ),
+            const Padding(padding: EdgeInsets.all(30)),
+            FutureBuilder<void>(
+              future: initFuture,
+              builder: (context, snapshot) {
+                // print('context: ' + context.toString());
+                // print('snapshot: ' + snapshot.toString());
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Non-Sleep Deep Rest',
-                    style: Theme.of(context).textTheme.headline5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Text('loading');
+                }
+
+                print('alarm on: ' + alarmSwitch.alarmOn.toString());
+                // -> this gets updated constantly
+                if (state == PlayerState.COMPLETED) {
+                  print('c0mpleted');
+                  if (alarmSwitch.alarmOn == true) {
+                    alarmPlayer.play();
+                  }
+                }
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    buildPlayButton(),
-                    buildPauseButton(),
-                    buildStopButton(),
+                    Text('Non-Sleep Deep Rest',
+                        style: Theme.of(context).textTheme.headline5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        buildPlayButton(),
+                        buildPauseButton(),
+                        buildStopButton(),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: LinearProgressIndicator(
+                        value: progress,
+                      ),
+                    ),
                   ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: LinearProgressIndicator(
-                    value: progress,
-                  ),
-                ),
-              ],
-            );
-          },
+                );
+              },
+            ),
+          ],
+          // child:
         ),
-      )),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           createDialog(context);
@@ -112,7 +148,7 @@ class NSDRState extends State<NSDR> {
     }
 
     return IconButton(
-        onPressed: player.play,
+        onPressed: nsdrPlayer.play,
         icon: const Icon(
           Icons.play_arrow,
           color: Colors.green,
@@ -132,10 +168,10 @@ class NSDRState extends State<NSDR> {
     }
 
     return IconButton(
-        onPressed: player.pause,
+        onPressed: nsdrPlayer.pause,
         icon: const Icon(
           Icons.pause,
-          color: Colors.grey,
+          color: Colors.green,
           size: iconSize,
         ));
   }
@@ -145,16 +181,16 @@ class NSDRState extends State<NSDR> {
       return const IconButton(
           onPressed: null,
           icon: Icon(
-            Icons.stop,
+            Icons.replay,
             color: Colors.grey,
             size: iconSize,
           ));
     }
 
     return IconButton(
-        onPressed: player.reset,
+        onPressed: nsdrPlayer.reset,
         icon: const Icon(
-          Icons.stop,
+          Icons.replay,
           color: Colors.green,
           size: iconSize,
         ));
@@ -171,7 +207,7 @@ class NSDRState extends State<NSDR> {
               child: Center(
                 child: Text(
                   '- Lắng nghe và làm theo chỉ dẫn trong đoạn ghi âm \n\n- Tác dụng: giúp bạn thư giãn nhanh và sâu, chìm vào giấc ngủ hoặc ngủ trở lại nếu thức dậy giữa chừng lúc nửa đêm, có thể dùng để thay thế giấc ngủ đã mất\n',
-                      // '- Nguồn khoa học nghiên cứu (trích): published by Front Psychiatry (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6361823/)',
+                  // '- Nguồn khoa học nghiên cứu (trích): published by Front Psychiatry (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6361823/)',
                   style: TextStyle(
                     fontSize: 20,
                   ),
