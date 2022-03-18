@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'nsdr.dart';
-import 'py_sigh.dart';
+import 'phy_sigh.dart';
 void main() => runApp(const FirstPageApp());
 
 class FirstPageApp extends StatelessWidget {
@@ -29,7 +29,7 @@ class FirstPageApp extends StatelessWidget {
         length: myTabs.length,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Stress reduce method'),
+            title: const Text('Giảm áp lực tức thì'),
             bottom: TabBar(
               tabs: myTabs,
             ),

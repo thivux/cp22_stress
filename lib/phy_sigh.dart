@@ -75,7 +75,7 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
                   ' -Tác dụng: khiến phổi bạn nở ra và nhịp tim chậm lại, giúp bạn bình tĩnh và cân bằng cảm xúc ngay lúc thở \n\n',
                 // ' -Nguồn khoa học: https://scopeblog.stanford.edu/2020/10/07/how-stress-affects-your-brain-and-how-to-reverse-it/',
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 20,
                   ),
                 ),
               ),
@@ -127,7 +127,7 @@ class CircleBox extends StatelessWidget {
         alignment: const Alignment(0, -1),
         child: SizedBox(
           width: 350,
-          height: 380,
+          height: 400,
           // color: Colors.red,   // uncomment to see container
           child: Container(
             margin: EdgeInsets.all(_marginAnimation.value),
