@@ -73,10 +73,10 @@ class NSDRState extends State<NSDR> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(10),
             ),
             Container(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(10.0),
               child: alarmSwitch,
             ),
             const Padding(padding: EdgeInsets.all(30)),
@@ -110,7 +110,7 @@ class NSDRState extends State<NSDR> {
                       children: [
                         buildPlayButton(),
                         buildPauseButton(),
-                        buildStopButton(),
+                        buildResetButton(),
                       ],
                     ),
                     Padding(
@@ -157,7 +157,16 @@ class NSDRState extends State<NSDR> {
   }
 
   Widget buildPauseButton() {
-    if (state == PlayerState.PAUSED) {
+    if (state == PlayerState.PLAYING) {
+      return IconButton(
+          onPressed: nsdrPlayer.pause,
+          icon: const Icon(
+            Icons.pause,
+            color: Colors.green,
+            size: iconSize,
+          ));
+    }
+    // if (state == PlayerState.PAUSED) {
       return const IconButton(
           onPressed: null,
           icon: Icon(
@@ -165,18 +174,12 @@ class NSDRState extends State<NSDR> {
             color: Colors.grey,
             size: iconSize,
           ));
-    }
+    // }
 
-    return IconButton(
-        onPressed: nsdrPlayer.pause,
-        icon: const Icon(
-          Icons.pause,
-          color: Colors.green,
-          size: iconSize,
-        ));
+
   }
 
-  Widget buildStopButton() {
+  Widget buildResetButton() {
     if (state == PlayerState.STOPPED) {
       return const IconButton(
           onPressed: null,
@@ -200,16 +203,19 @@ class NSDRState extends State<NSDR> {
     return showDialog(
         context: context,
         builder: (context) {
-          return const Dialog(
+          return Dialog(
             child: SizedBox(
               width: 300,
               height: 350,
               child: Center(
-                child: Text(
-                  '- Lắng nghe và làm theo chỉ dẫn trong đoạn ghi âm \n\n- Tác dụng: giúp bạn thư giãn nhanh và sâu, chìm vào giấc ngủ hoặc ngủ trở lại nếu thức dậy giữa chừng lúc nửa đêm, có thể dùng để thay thế giấc ngủ đã mất\n',
-                  // '- Nguồn khoa học nghiên cứu (trích): published by Front Psychiatry (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6361823/)',
-                  style: TextStyle(
-                    fontSize: 20,
+                child: Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    '- Lắng nghe và làm theo chỉ dẫn trong đoạn ghi âm \n\n- Tác dụng: giúp bạn thư giãn nhanh và sâu, dễ dàng chìm vào giấc ngủ hoặc ngủ trở lại nếu thức dậy giữa chừng lúc nửa đêm, có thể dùng để thay thế giấc ngủ đã mất\n',
+                    // '- Nguồn khoa học nghiên cứu (trích): published by Front Psychiatry (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6361823/)',
+                    style: TextStyle(
+                      fontSize: 19,
+                    ),
                   ),
                 ),
               ),
