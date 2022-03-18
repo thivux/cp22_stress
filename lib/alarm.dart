@@ -1,5 +1,3 @@
-// import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +6,7 @@ void main() {
 }
 
 class AlarmSwitch extends StatefulWidget {
-  bool alarmOn = true;
+  bool alarmOn = false;
 
   AlarmSwitch({Key? key}) : super(key: key);
 
@@ -32,7 +30,7 @@ class AlarmSwitchState extends State<AlarmSwitch> {
           const Text(
             'Chuông báo khi bài tập kết thúc',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 15,
               // fontWeight: FontWeight.w400,
             ),
           ),
@@ -46,7 +44,7 @@ class AlarmSwitchState extends State<AlarmSwitch> {
 
   Widget buildSwitch() {
     return Transform.scale(
-      scale: 1.5,
+      scale: 1,
       child: Switch.adaptive(
         activeColor: Colors.pinkAccent,
         activeTrackColor: Colors.pink.withOpacity(0.4),
