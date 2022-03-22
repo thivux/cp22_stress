@@ -22,19 +22,24 @@ class NSDR extends StatefulWidget {
 
 class NSDRState extends State<NSDR> {
   static const iconSize = 50.0;
-
   final nsdrPlayer = AudioAssetPlayer('nsdr.mp3');
-
+  final nsdrEN = AudioAssetPlayer('QuanComNgayMua.mp3');
   AudioAssetPlayer alarmPlayer = AudioAssetPlayer('alarm.wav');
+  AudioAssetPlayer alarmPlayerEN = AudioAssetPlayer('alarm.wav');
 
   // stuff need getting update: state & progress
   late final StreamSubscription progressSubscription;
+  late final StreamSubscription progressSubscriptionEN;
   late final StreamSubscription stateSubscription;
+  late final StreamSubscription stateSubscriptionEN;
 
   double progress = 0.0;
+  double progressEN = 0.0;
   PlayerState state = PlayerState.STOPPED;
+  PlayerState stateEN = PlayerState.STOPPED;
 
   late final Future initFuture;
+  late final Future initFutureEN;
 
   @override
   void initState() {
@@ -45,12 +50,31 @@ class NSDRState extends State<NSDR> {
       stateSubscription =
           nsdrPlayer.stateStream.listen((s) => setState(() => state = s));
     });
+    initFutureEN = nsdrEN.init().then((_) {
+      alarmPlayerEN.init();
+      progressSubscriptionEN =
+          nsdrEN.progressStream.listen((p) => setState(() => progressEN = p));
+      stateSubscriptionEN =
+          nsdrEN.stateStream.listen((s) => setState(() => stateEN = s));
+    });
     super.initState();
   }
+
+  // void initStateEN() {
+  //   initFutureEN = nsdrEN.init().then((_) {
+  //     alarmPlayerEN.init();
+  //     progressSubscriptionEN =
+  //         nsdrEN.progressStream.listen((p) => setState(() => progressEN = p));
+  //     stateSubscriptionEN =
+  //         nsdrEN.stateStream.listen((s) => setState(() => stateEN = s));
+  //   });
+  //   super.initState();
+  // }
 
   @override
   void dispose() {
     nsdrPlayer.dispose();
+    nsdrEN.dispose();
     alarmPlayer.dispose();
     super.dispose();
   }
@@ -80,10 +104,16 @@ class NSDRState extends State<NSDR> {
                   return const Text('loading');
                 }
 
-                Text('alarm on: ' + alarmSwitch.alarmOn.toString());
+                Text('Alarm on: ' + alarmSwitch.alarmOn.toString());
                 // -> this gets updated constantly
                 if (state == PlayerState.COMPLETED) {
-                  const Text('completed');
+                  const Text('Completed');
+                  if (alarmSwitch.alarmOn == true) {
+                    alarmPlayer.play();
+                  }
+                }
+                if (stateEN == PlayerState.COMPLETED) {
+                  const Text('Completed');
                   if (alarmSwitch.alarmOn == true) {
                     alarmPlayer.play();
                   }
@@ -100,6 +130,16 @@ class NSDRState extends State<NSDR> {
                         buildPlayButton(),
                         buildPauseButton(),
                         buildResetButton(),
+                      ],
+                    ),
+                    Text('English version',
+                        style: Theme.of(context).textTheme.headline5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        buildPlayButtonEN(),
+                        buildPauseButtonEN(),
+                        buildResetButtonEN(),
                       ],
                     ),
                     Padding(
@@ -145,10 +185,51 @@ class NSDRState extends State<NSDR> {
         ));
   }
 
+  Widget buildPlayButtonEN() {
+    if (stateEN == PlayerState.PLAYING) {
+      return const IconButton(
+          onPressed: null,
+          icon: Icon(
+            Icons.play_arrow,
+            color: Colors.grey,
+            size: iconSize,
+          ));
+    }
+
+    return IconButton(
+        onPressed: nsdrEN.play,
+        icon: const Icon(
+          Icons.play_arrow,
+          color: Colors.green,
+          size: iconSize,
+        ));
+  }
+
   Widget buildPauseButton() {
     if (state == PlayerState.PLAYING) {
       return IconButton(
           onPressed: nsdrPlayer.pause,
+          icon: const Icon(
+            Icons.pause,
+            color: Colors.green,
+            size: iconSize,
+          ));
+    }
+    // if (state == PlayerState.PAUSED) {
+    return const IconButton(
+        onPressed: null,
+        icon: Icon(
+          Icons.pause,
+          color: Colors.grey,
+          size: iconSize,
+        ));
+    // }
+  }
+
+  Widget buildPauseButtonEN() {
+    if (stateEN == PlayerState.PLAYING) {
+      return IconButton(
+          onPressed: nsdrEN.pause,
           icon: const Icon(
             Icons.pause,
             color: Colors.green,
@@ -179,6 +260,26 @@ class NSDRState extends State<NSDR> {
 
     return IconButton(
         onPressed: nsdrPlayer.reset,
+        icon: const Icon(
+          Icons.replay,
+          color: Colors.green,
+          size: iconSize,
+        ));
+  }
+
+  Widget buildResetButtonEN() {
+    if (stateEN == PlayerState.STOPPED) {
+      return const IconButton(
+          onPressed: null,
+          icon: Icon(
+            Icons.replay,
+            color: Colors.grey,
+            size: iconSize,
+          ));
+    }
+
+    return IconButton(
+        onPressed: nsdrEN.reset,
         icon: const Icon(
           Icons.replay,
           color: Colors.green,
