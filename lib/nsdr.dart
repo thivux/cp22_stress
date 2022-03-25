@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'audio_player.dart';
 import 'alarm.dart';
 
-// test nsdr
 void main() {
   runApp(const MaterialApp(
     home: NSDR(),
@@ -67,9 +66,7 @@ class NSDRState extends State<NSDR> {
     return Scaffold(
       // backgroundColor: Colors.blue[100],
       body: Center(
-        // child: Padding(
         child: Column(
-          // padding: const EdgeInsets.all(16.0),
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Padding(
@@ -83,22 +80,18 @@ class NSDRState extends State<NSDR> {
             FutureBuilder<void>(
               future: initFuture,
               builder: (context, snapshot) {
-                // print('context: ' + context.toString());
-                // print('snapshot: ' + snapshot.toString());
-
                 if (snapshot.connectionState != ConnectionState.done) {
                   return const Text('loading');
                 }
 
-                print('alarm on: ' + alarmSwitch.alarmOn.toString());
+                Text('alarm on: ' + alarmSwitch.alarmOn.toString());
                 // -> this gets updated constantly
                 if (state == PlayerState.COMPLETED) {
-                  print('c0mpleted');
+                  const Text('completed');
                   if (alarmSwitch.alarmOn == true) {
                     alarmPlayer.play();
                   }
                 }
-
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
@@ -167,16 +160,14 @@ class NSDRState extends State<NSDR> {
           ));
     }
     // if (state == PlayerState.PAUSED) {
-      return const IconButton(
-          onPressed: null,
-          icon: Icon(
-            Icons.pause,
-            color: Colors.grey,
-            size: iconSize,
-          ));
+    return const IconButton(
+        onPressed: null,
+        icon: Icon(
+          Icons.pause,
+          color: Colors.grey,
+          size: iconSize,
+        ));
     // }
-
-
   }
 
   Widget buildResetButton() {
