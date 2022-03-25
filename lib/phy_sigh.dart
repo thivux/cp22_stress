@@ -39,11 +39,11 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
       TweenSequenceItem(
         // exhale
           tween: Tween<double>(begin: 30, end: 100),
-          weight: 7),
+          weight: 6),
       TweenSequenceItem(
         // stop
           tween: Tween<double>(begin: 100, end: 100),
-          weight: 2),
+          weight: 1.5),
     ]).animate(_controller);
   }
 
