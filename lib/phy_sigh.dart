@@ -73,7 +73,7 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
                 child: Container(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
-                    '\n-Physiological sigh: hít vào một hơi thật nhanh và mạnh, ních thêm chút nữa khi bong bóng nở ra rồi thở ra từ từ khi bong bóng xẹp lại\n'
+                    '\nHướng dẫn: hít vào một hơi thật nhanh và mạnh, hít thêm một hơi nữa khi bong bóng nở ra, rồi thở ra từ từ khi bong bóng thu nhỏ lại\n'
                     '\n- Phù hợp thực hành trong những tình huống bạn bị mất bình tĩnh: chuẩn bị thi, chuẩn bị đánh nhau, khủng hoảng hiện sinh...\n'
                     ' \n-Tác dụng: khiến phổi bạn nở ra và nhịp tim chậm lại, giúp bạn bình tĩnh và cân bằng cảm xúc ngay lúc thở \n\n',
                   // ' -Nguồn khoa học: https://scopeblog.stanford.edu/2020/10/07/how-stress-affects-your-brain-and-how-to-reverse-it/',
