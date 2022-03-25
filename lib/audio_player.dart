@@ -16,11 +16,11 @@ class AudioAssetPlayer {
 
   AudioAssetPlayer(this.filename);
 
-  Future<void> int() async {
+  Future<void> init() async {
     audioPlayer = await AudioCache().play(filename);
 
     // avoid bug - the duration returned = 0
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 50));
 
     audioDurationMS = await audioPlayer.getDuration();
 
@@ -44,7 +44,9 @@ class AudioAssetPlayer {
         progressStreamController.close(),
       ]);
 
-  Future<void> play() => audioPlayer.resume();
+  Future<void> play() {
+    return audioPlayer.resume();
+  }
 
   Future<void> pause() => audioPlayer.pause();
 
