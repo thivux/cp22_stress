@@ -73,7 +73,7 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
                 child: Container(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
-                    '\nHướng dẫn: hít vào một hơi thật nhanh và mạnh, hít thêm một hơi nữa khi bong bóng nở ra, rồi thở ra từ từ khi bong bóng thu nhỏ lại\n'
+                    '\n- Hướng dẫn: hít vào một hơi thật nhanh và mạnh, hít thêm một hơi nữa khi bong bóng nở ra, rồi thở ra từ từ khi bong bóng thu nhỏ lại\n'
                     '\n- Phù hợp thực hành trong những tình huống bạn bị mất bình tĩnh: chuẩn bị thi, chuẩn bị đánh nhau, khủng hoảng hiện sinh...\n'
                     ' \n-Tác dụng: khiến phổi bạn nở ra và nhịp tim chậm lại, giúp bạn bình tĩnh và cân bằng cảm xúc ngay lúc thở \n\n',
                   // ' -Nguồn khoa học: https://scopeblog.stanford.edu/2020/10/07/how-stress-affects-your-brain-and-how-to-reverse-it/',
@@ -95,16 +95,20 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
         animation: _controller,
         builder: (BuildContext context, _) {
           return Scaffold(
-            body: Column(
-              children: <Widget>[
-                CircleBox(marginAnimation: _marginAnimation),
-                ElevatedButton(
-                    onPressed: () {
-                      _playAnimation();
-                    },
-                    child: const Text('Bắt đầu'))
-              ],
-              mainAxisAlignment: MainAxisAlignment.start,
+            body: Container(
+              height: 500,
+              width: 500,
+              child: Column(
+                children: <Widget>[
+                  CircleBox(marginAnimation: _marginAnimation),
+                  ElevatedButton(
+                      onPressed: () {
+                        _playAnimation();
+                      },
+                      child: const Text('Bắt đầu'))
+                ],
+                mainAxisAlignment: MainAxisAlignment.start,
+              ),
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
