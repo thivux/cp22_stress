@@ -85,7 +85,9 @@ class NSDRState extends State<NSDR> {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Colors.blue[100],
-      body: Center(
+      body: Container(
+        height: 500,
+        width: 500,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
