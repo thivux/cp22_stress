@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -6,7 +7,7 @@ void main() {
 }
 
 class AlarmSwitch extends StatefulWidget {
-  bool alarmOn = false;
+  bool alarmOn = true;
 
   AlarmSwitch({Key? key}) : super(key: key);
 
@@ -19,24 +20,18 @@ class AlarmSwitch extends StatefulWidget {
 class AlarmSwitchState extends State<AlarmSwitch> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // padding: EdgeInsets.all(30.0),
-      // margin: EdgeInsets.all(0),
-      // color: Colors.pink[100], // uncomment to see shape of container
-      // elevation: 1.0,
-      child: Row(
+    return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
             'Chuông báo khi bài tập kết thúc',
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 20,
               // fontWeight: FontWeight.w400,
             ),
           ),
           buildSwitch(),
         ],
-      ),
     );
     //   ),
     // );
@@ -44,7 +39,7 @@ class AlarmSwitchState extends State<AlarmSwitch> {
 
   Widget buildSwitch() {
     return Transform.scale(
-      scale: 1,
+      scale: 1.5,
       child: Switch.adaptive(
         activeColor: Colors.pinkAccent,
         activeTrackColor: Colors.pink.withOpacity(0.4),
