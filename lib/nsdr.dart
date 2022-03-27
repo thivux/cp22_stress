@@ -1,11 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'audio_player.dart';
-import 'alarm.dart';
-
+// test nsdr
 void main() {
   runApp(const MaterialApp(
     home: NSDR(),
@@ -16,202 +15,76 @@ class NSDR extends StatefulWidget {
   const NSDR({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return NSDRState();
-  }
+  _AudioplayerState createState() => _AudioplayerState();
 }
 
-class NSDRState extends State<NSDR> {
-  static const iconSize = 50.0;
-
-  final nsdrPlayer = AudioAssetPlayer('nsdr.mp3');
-  // final nsdrPlayer = AudioAssetPlayer('alarm.wav');
-  AudioAssetPlayer alarmPlayer = AudioAssetPlayer('alarm.wav');
-
-  // stuff need getting update: state & progress
-  late final StreamSubscription progressSubscription;
-  late final StreamSubscription stateSubscription;
-
-  double progress = 0.0;
-  PlayerState state = PlayerState.STOPPED;
-
-  late final Future initFuture;
+class _AudioplayerState extends State<NSDR> {
+  final AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
 
   @override
   void initState() {
-    initFuture = nsdrPlayer.init().then((_) {
-      alarmPlayer.init();
-      progressSubscription =
-          nsdrPlayer.progressStream.listen((p) => setState(() => progress = p));
-      stateSubscription =
-          nsdrPlayer.stateStream.listen((s) => setState(() => state = s));
-      // print('fuck you: ' + progress.toString()); -> only gets called once
-    });
+    // TODO: implement initState
     super.initState();
+    setupPlaylist();
+  }
+
+  void setupPlaylist() async {
+    await audioPlayer.open(Audio('asset/nsdr.mp3'), autoStart: false);
   }
 
   @override
   void dispose() {
-    nsdrPlayer.dispose();
-    alarmPlayer.dispose();
+    // TODO: implement dispose
     super.dispose();
+    audioPlayer.dispose();
   }
 
-  AlarmSwitch alarmSwitch = AlarmSwitch();
-
-  // print('alarm being called');
+  Widget circularAudioPlayer(
+      RealtimePlayingInfos realtimePlayingInfos, double screenWidth) {
+    Color primaryColor = Color(0xff2f6f88);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(height: 80),
+        CircularPercentIndicator(
+            radius: screenWidth / 2,
+            arcType: ArcType.HALF,
+            backgroundColor: primaryColor,
+            progressColor: Colors.white,
+            percent: realtimePlayingInfos.currentPosition.inSeconds /
+                realtimePlayingInfos.duration.inSeconds,
+            center: IconButton(
+              iconSize: screenWidth / 8,
+              color: primaryColor,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              icon: Icon(realtimePlayingInfos.isPlaying
+                  ? Icons.pause_rounded
+                  : Icons.play_arrow_rounded),
+              onPressed: () => audioPlayer.playOrPause(),
+            ))
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.blue[100],
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(10),
-            ),
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              child: alarmSwitch,
-            ),
-            const Padding(padding: EdgeInsets.all(30)),
-            FutureBuilder<void>(
-              future: initFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return const Text('loading');
-                }
-
-                Text('alarm on: ' + alarmSwitch.alarmOn.toString());
-                // -> this gets updated constantly
-                if (state == PlayerState.COMPLETED) {
-                  const Text('completed');
-                  if (alarmSwitch.alarmOn == true) {
-                    alarmPlayer.play();
-                  }
-                }
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Non-Sleep Deep Rest',
-                        style: Theme.of(context).textTheme.headline5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        buildPlayButton(),
-                        buildPauseButton(),
-                        buildResetButton(),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(32.0),
-                      child: LinearProgressIndicator(
-                        value: progress,
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ],
-          // child:
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          createDialog(context);
-        },
-        child: const Text('?'),
+      body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/NSDR1.png'), fit: BoxFit.cover)),
+        alignment: Alignment.center,
+        child: audioPlayer.builderRealtimePlayingInfos(
+            builder: (context, realtimePlayingInfos) {
+          if (realtimePlayingInfos != null) {
+            return circularAudioPlayer(
+                realtimePlayingInfos, MediaQuery.of(context).size.width);
+          } else {
+            return Container();
+          }
+        }),
       ),
     );
-  }
-
-  Widget buildPlayButton() {
-    if (state == PlayerState.PLAYING) {
-      return const IconButton(
-          onPressed: null,
-          icon: Icon(
-            Icons.play_arrow,
-            color: Colors.grey,
-            size: iconSize,
-          ));
-    }
-
-    return IconButton(
-        onPressed: nsdrPlayer.play,
-        icon: const Icon(
-          Icons.play_arrow,
-          color: Colors.green,
-          size: iconSize,
-        ));
-  }
-
-  Widget buildPauseButton() {
-    if (state == PlayerState.PLAYING) {
-      return IconButton(
-          onPressed: nsdrPlayer.pause,
-          icon: const Icon(
-            Icons.pause,
-            color: Colors.green,
-            size: iconSize,
-          ));
-    }
-    // if (state == PlayerState.PAUSED) {
-    return const IconButton(
-        onPressed: null,
-        icon: Icon(
-          Icons.pause,
-          color: Colors.grey,
-          size: iconSize,
-        ));
-    // }
-  }
-
-  Widget buildResetButton() {
-    if (state == PlayerState.STOPPED) {
-      return const IconButton(
-          onPressed: null,
-          icon: Icon(
-            Icons.replay,
-            color: Colors.grey,
-            size: iconSize,
-          ));
-    }
-
-    return IconButton(
-        onPressed: nsdrPlayer.reset,
-        icon: const Icon(
-          Icons.replay,
-          color: Colors.green,
-          size: iconSize,
-        ));
-  }
-
-  createDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-            child: SizedBox(
-              width: 300,
-              height: 350,
-              child: Center(
-                child: Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    '- Hướng dẫn: lắng nghe và làm theo chỉ dẫn trong đoạn ghi âm \n\n- Tác dụng: giúp bạn thư giãn nhanh và sâu, dễ dàng chìm vào giấc ngủ hoặc ngủ trở lại nếu thức dậy giữa chừng lúc nửa đêm, có thể dùng để thay thế giấc ngủ đã mất\n',
-                    // '- Nguồn khoa học nghiên cứu (trích): published by Front Psychiatry (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6361823/)',
-                    style: TextStyle(
-                      fontSize: 19,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        });
   }
 }
