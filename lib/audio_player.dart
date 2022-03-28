@@ -20,7 +20,7 @@ class AudioAssetPlayer {
     audioPlayer = await AudioCache().play(filename);
 
     // avoid bug - the duration returned = 0
-    await Future.delayed(const Duration(milliseconds: 50));
+    await Future.delayed(const Duration(milliseconds: 100));
 
     audioDurationMS = await audioPlayer.getDuration();
 
