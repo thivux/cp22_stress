@@ -70,20 +70,69 @@ class _AudioplayerState extends State<NSDR> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.blue[100],
       body: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/NSDR1.png'), fit: BoxFit.cover)),
-        alignment: Alignment.center,
-        child: audioPlayer.builderRealtimePlayingInfos(
-            builder: (context, realtimePlayingInfos) {
-          if (realtimePlayingInfos != null) {
-            return circularAudioPlayer(
-                realtimePlayingInfos, MediaQuery.of(context).size.width);
-          } else {
-            return Container();
-          }
-        }),
+        height: 500,
+        width: 500,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(10),
+            ),
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              child: alarmSwitch,
+            ),
+            const Padding(padding: EdgeInsets.all(30)),
+            FutureBuilder<void>(
+              future: initFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Text('loading');
+                }
+
+                Text('alarm on: ' + alarmSwitch.alarmOn.toString());
+                // -> this gets updated constantly
+                if (state == PlayerState.COMPLETED) {
+                  const Text('completed');
+                  if (alarmSwitch.alarmOn == true) {
+                    alarmPlayer.play();
+                  }
+                }
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Non-Sleep Deep Rest',
+                        style: Theme.of(context).textTheme.headline5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        buildPlayButton(),
+                        buildPauseButton(),
+                        buildResetButton(),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: LinearProgressIndicator(
+                        value: progress,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+          // child:
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          createDialog(context);
+        },
+        child: const Text('?'),
       ),
     );
   }
