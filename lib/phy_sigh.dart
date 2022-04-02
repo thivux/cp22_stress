@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 class Bubble extends StatefulWidget {
@@ -21,27 +23,27 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
 
     _marginAnimation = TweenSequence(<TweenSequenceItem<double>>[
       TweenSequenceItem(
-        // inhale 1
+          // inhale 1
           tween: Tween<double>(begin: 100, end: 40),
           weight: 1.5),
       TweenSequenceItem(
-        // stop
+          // stop
           tween: Tween<double>(begin: 40, end: 40),
           weight: 1),
       TweenSequenceItem(
-        // inhale 2
+          // inhale 2
           tween: Tween<double>(begin: 40, end: 30),
           weight: 1),
       TweenSequenceItem(
-        // stop
+          // stop
           tween: Tween<double>(begin: 30, end: 30),
           weight: 1),
       TweenSequenceItem(
-        // exhale
+          // exhale
           tween: Tween<double>(begin: 30, end: 100),
           weight: 6),
       TweenSequenceItem(
-        // stop
+          // stop
           tween: Tween<double>(begin: 100, end: 100),
           weight: 1.5),
     ]).animate(_controller);
@@ -71,12 +73,12 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
               height: 450,
               child: Center(
                 child: Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
+                  padding: const EdgeInsets.all(10.0),
+                  child: const Text(
                     '\n- Hướng dẫn: hít vào một hơi thật nhanh và mạnh, hít thêm một hơi nữa khi bong bóng nở ra, rồi thở ra từ từ khi bong bóng thu nhỏ lại\n'
                     '\n- Phù hợp thực hành trong những tình huống bạn bị mất bình tĩnh: chuẩn bị thi, chuẩn bị đánh nhau, khủng hoảng hiện sinh...\n'
                     ' \n-Tác dụng: khiến phổi bạn nở ra và nhịp tim chậm lại, giúp bạn bình tĩnh và cân bằng cảm xúc ngay lúc thở \n\n',
-                  // ' -Nguồn khoa học: https://scopeblog.stanford.edu/2020/10/07/how-stress-affects-your-brain-and-how-to-reverse-it/',
+                    // ' -Nguồn khoa học: https://scopeblog.stanford.edu/2020/10/07/how-stress-affects-your-brain-and-how-to-reverse-it/',
                     softWrap: true,
                     style: TextStyle(
                       fontSize: 19,
@@ -89,26 +91,41 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
         });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
         animation: _controller,
         builder: (BuildContext context, _) {
           return Scaffold(
-            body: Container(
-              height: 500,
-              width: 500,
-              child: Column(
-                children: <Widget>[
-                  CircleBox(marginAnimation: _marginAnimation),
-                  ElevatedButton(
-                      onPressed: () {
-                        _playAnimation();
-                      },
-                      child: const Text('Bắt đầu'))
-                ],
-                mainAxisAlignment: MainAxisAlignment.start,
-              ),
+            body: Column(
+              children: <Widget>[
+                Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    PlayButton(),
+                    const Flexible(fit: FlexFit.tight, child: SizedBox(
+                      width: 20,
+                      height: 20,
+                    )),
+                    FloatingActionButton(
+                      onPressed: () {},
+                      child: Image.asset(
+                        'assets/listening.png',
+                        height: 30,
+                        width: 30,
+                      ),
+                    ),
+                  ],
+                ),
+                CircleBox(marginAnimation: _marginAnimation),
+                ElevatedButton(
+                    onPressed: () {
+                      _playAnimation();
+                    },
+                    child: const Text('Bắt đầu'))
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
@@ -136,16 +153,90 @@ class CircleBox extends StatelessWidget {
         alignment: const Alignment(0, 1),
         child: SizedBox(
           width: 350,
-          height: 400,
+          height: 300,
           child: Container(
-          // color: Colors.blue,   // uncomment to see container
+            // color: Colors.blue,   // uncomment to see container
             margin: EdgeInsets.all(_marginAnimation.value),
             decoration: const BoxDecoration(
               color: Colors.pinkAccent,
               shape: BoxShape.circle,
             ),
           ),
-        )
+        ));
+  }
+}
+
+class PlayButton extends StatefulWidget {
+  const PlayButton({Key? key}) : super(key: key);
+  @override
+  _PlayButtonState createState() => _PlayButtonState();
+}
+
+class _PlayButtonState extends State<PlayButton> {
+  late StreamSubscription<void> _playerSub;
+  late AudioPlayer _audio;
+
+  bool _isPlaying = false;
+  bool _isPaused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _audio = AudioPlayer();
+    _playerSub = _audio.onPlayerCompletion.listen((event) {
+      _clearPlayer();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _playerSub.cancel();
+    _audio.dispose();
+  }
+
+  void _clearPlayer() {
+    setState(() {
+      _isPlaying = false;
+      _isPaused = false;
+    });
+  }
+
+  Future play() async {
+    int result = await _audio.play('QuanComNgayMua.mp3');
+    if (result == 1) {
+      setState(() {
+        _isPlaying = true;
+      });
+    }
+  }
+
+  Future pause() async {
+    int result = await _audio.pause();
+    if (result == 1) {
+      setState(() {
+        _isPlaying = false;
+      });
+    }
+  }
+
+  Future resume() async {
+    int result = await _audio.resume();
+    if (result == 1) {
+      setState(() {
+        _isPlaying = true;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: (_isPlaying)
+          ? Icon(Icons.pause_circle_filled)
+          : Icon(Icons.play_circle_outline),
+      iconSize: 40,
+      onPressed: () => _isPlaying ? pause() : _isPaused ? resume() : play(),
     );
   }
 }
