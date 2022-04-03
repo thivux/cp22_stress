@@ -21,7 +21,7 @@ class NSDR extends StatefulWidget {
 }
 
 class NSDRState extends State<NSDR> {
-  Color primaryColor = Color(0xff2f6f88);
+  Color primaryColor = const Color(0xff2f6f88);
 
   final nsdrPlayer = AudioAssetPlayer('nsdr.mp3');
 
@@ -60,7 +60,7 @@ class NSDRState extends State<NSDR> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('assets/background_1.jpg'), fit: BoxFit.cover)),
         alignment: Alignment.center,
@@ -75,7 +75,7 @@ class NSDRState extends State<NSDR> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: EdgeInsets.all(32.0),
+                  padding: const EdgeInsets.all(32.0),
                   child: LinearProgressIndicator(
                     value: progress,
                     backgroundColor: Colors.white24,

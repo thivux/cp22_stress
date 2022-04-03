@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cp22_health_app/audio_player.dart';
 import 'package:flutter/material.dart';
 
 class Bubble extends StatefulWidget {
@@ -92,6 +93,29 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
   }
 
 
+  final _breathSound = AudioAssetPlayer('Breath.mp3');
+  late final StreamSubscription progressSubscription;
+  late final StreamSubscription stateSubscription;
+
+  double progress = 0.0;
+  PlayerState state = PlayerState.STOPPED;
+  late final Future initFuture;
+
+  void initStateBreath() {
+    initFuture = _breathSound.init().then((_) {
+      progressSubscription = _breathSound.progressStream
+          .listen((p) => setState(() => progress = p));
+      stateSubscription =
+          _breathSound.stateStream.listen((s) => setState(() => state = s));
+    });
+    super.initState();
+  }
+
+  void disposeBreath() {
+    _breathSound.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -103,11 +127,6 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
                 Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    PlayButton(),
-                    const Flexible(fit: FlexFit.tight, child: SizedBox(
-                      width: 20,
-                      height: 20,
-                    )),
                     FloatingActionButton(
                       onPressed: () {},
                       child: Image.asset(
@@ -116,12 +135,22 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
                         width: 30,
                       ),
                     ),
+                    const Flexible(
+                        fit: FlexFit.tight,
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                        )),
+                    const PlayButton(),
                   ],
                 ),
                 CircleBox(marginAnimation: _marginAnimation),
                 ElevatedButton(
                     onPressed: () {
                       _playAnimation();
+                      state == PlayerState.PLAYING
+                          ? _breathSound.pause()
+                          : _breathSound.play();
                     },
                     child: const Text('Bắt đầu'))
               ],
@@ -136,6 +165,7 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
           );
         });
   }
+
 }
 
 class CircleBox extends StatelessWidget {
@@ -173,70 +203,42 @@ class PlayButton extends StatefulWidget {
 }
 
 class _PlayButtonState extends State<PlayButton> {
-  late StreamSubscription<void> _playerSub;
-  late AudioPlayer _audio;
+  final _backgroundMusic = AudioAssetPlayer('QuanComNgayMua.mp3');
+  late final StreamSubscription progressSubscription;
+  late final StreamSubscription stateSubscription;
 
-  bool _isPlaying = false;
-  bool _isPaused = false;
+  double progress = 0.0;
+  PlayerState state = PlayerState.STOPPED;
+  late final Future initFuture;
 
   @override
   void initState() {
-    super.initState();
-    _audio = AudioPlayer();
-    _playerSub = _audio.onPlayerCompletion.listen((event) {
-      _clearPlayer();
+    initFuture = _backgroundMusic.init().then((_) {
+      progressSubscription = _backgroundMusic.progressStream
+          .listen((p) => setState(() => progress = p));
+      stateSubscription =
+          _backgroundMusic.stateStream.listen((s) => setState(() => state = s));
     });
+    super.initState();
   }
 
   @override
   void dispose() {
+    _backgroundMusic.dispose();
     super.dispose();
-    _playerSub.cancel();
-    _audio.dispose();
-  }
-
-  void _clearPlayer() {
-    setState(() {
-      _isPlaying = false;
-      _isPaused = false;
-    });
-  }
-
-  Future play() async {
-    int result = await _audio.play('QuanComNgayMua.mp3');
-    if (result == 1) {
-      setState(() {
-        _isPlaying = true;
-      });
-    }
-  }
-
-  Future pause() async {
-    int result = await _audio.pause();
-    if (result == 1) {
-      setState(() {
-        _isPlaying = false;
-      });
-    }
-  }
-
-  Future resume() async {
-    int result = await _audio.resume();
-    if (result == 1) {
-      setState(() {
-        _isPlaying = true;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: (_isPlaying)
-          ? Icon(Icons.pause_circle_filled)
-          : Icon(Icons.play_circle_outline),
-      iconSize: 40,
-      onPressed: () => _isPlaying ? pause() : _isPaused ? resume() : play(),
-    );
+        icon: Icon(state == PlayerState.PLAYING
+            ? Icons.pause_rounded
+            : Icons.play_arrow_rounded),
+        iconSize: 40,
+        onPressed: () {
+          state == PlayerState.PLAYING
+              ? _backgroundMusic.pause()
+              : _backgroundMusic.play();
+        });
   }
 }
