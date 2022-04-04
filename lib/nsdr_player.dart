@@ -22,8 +22,11 @@ class NSDR extends StatefulWidget {
 
 class NSDRState extends State<NSDR> {
   Color primaryColor = Color(0xff2f6f88);
+  bool alarmOn = false;
+  bool backgroundMusicOn = true;
 
   final nsdrPlayer = AudioAssetPlayer('nsdr.mp3');
+  AudioAssetPlayer alarmPlayer = AudioAssetPlayer('alarm.wav');
 
   // stuff need getting update: state & progress
   late final StreamSubscription progressSubscription;
@@ -37,6 +40,7 @@ class NSDRState extends State<NSDR> {
   @override
   void initState() {
     initFuture = nsdrPlayer.init().then((_) {
+      alarmPlayer.init();
       progressSubscription =
           nsdrPlayer.progressStream.listen((p) => setState(() => progress = p));
       stateSubscription =
@@ -58,35 +62,119 @@ class NSDRState extends State<NSDR> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/background_1.jpg'), fit: BoxFit.cover)),
-        alignment: Alignment.center,
-        child: FutureBuilder<void>(
-          future: initFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Text('loading');
-            }
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(32.0),
-                  child: LinearProgressIndicator(
-                    value: progress,
-                    backgroundColor: Colors.white24,
-                    color: primaryColor,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/background_1.jpg'),
+            fit: BoxFit.cover,
+            // opacity: 0.8,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  iconSize: screenWidth / 10,
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: Colors.white70,
                   ),
+                  onPressed: null,
                 ),
-                buildPlayOrPauseButton(MediaQuery.of(context).size.width),
+              ),
+              FutureBuilder<void>(
+                future: initFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return const Text('loading');
+                  }
 
-              ],
-            );
-          },
+                  if (state == PlayerState.COMPLETED) {
+                    print('completed');
+                    if (alarmOn == true) {
+                      alarmPlayer.play();
+                    }
+                  }
+
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(32.0),
+                        child: LinearProgressIndicator(
+                          value: progress,
+                          backgroundColor: Colors.white24,
+                          color: primaryColor,
+                        ),
+                      ),
+                      buildPlayOrPauseButton(screenWidth),
+                    ],
+                  );
+                },
+              ),
+              Container(
+                // color: Colors.red,   // uncomment to see shape of container
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Column(
+                      children: [
+                        IconButton(
+                          iconSize: screenWidth / 10,
+                          onPressed: () {
+                            setState(() {
+                              backgroundMusicOn = !backgroundMusicOn;
+                            });
+                          },
+                          icon: Icon(
+                            Icons.surround_sound_outlined,
+                            color: backgroundMusicOn ? Colors.white : Colors.white54,
+                          ),
+                        ),
+                        Text(
+                          "Nhạc nền",
+                          style: TextStyle(
+                            color: backgroundMusicOn ? Colors.white : Colors.white54,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Column(
+                      children: [
+                        IconButton(
+                          iconSize: screenWidth / 10,
+                          onPressed: () {
+                            setState(() {
+                              alarmOn = !alarmOn;
+                            });
+                          },
+                          icon: Icon(
+                            Icons.alarm,
+                            color: alarmOn ? Colors.white : Colors.white54,
+                          ),
+                        ),
+                        Text(
+                          "Báo thức",
+                          style: TextStyle(
+                            color: alarmOn ? Colors.white : Colors.white54,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -95,15 +183,45 @@ class NSDRState extends State<NSDR> {
   Widget buildPlayOrPauseButton(double screenWidth) {
     return IconButton(
         iconSize: screenWidth / 8,
-        color: primaryColor,
+        color: Colors.white70,
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
         icon: Icon(state == PlayerState.PLAYING
-        ? Icons.pause_rounded
-        : Icons.play_arrow_rounded),
-    onPressed: () {
-      state == PlayerState.PLAYING ? nsdrPlayer.pause() : nsdrPlayer.play();
-    }
-    );
+            ? Icons.pause_rounded
+            : Icons.play_arrow_rounded),
+        onPressed: () {
+          state == PlayerState.PLAYING ? nsdrPlayer.pause() : nsdrPlayer.play();
+        });
   }
 }
+
+// class NSDRToggleButton extends StatefulWidget {
+//   @override
+//   State<StatefulWidget> createState() {
+//     return NSDRToggleButtonsState();
+//   }
+// }
+//
+// class NSDRToggleButtonsState extends State<NSDRToggleButton> {
+//   List<bool> selections = [false, false];
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ToggleButtons(
+//       isSelected: selections,
+//       selectedColor: Colors.white,
+//       color: Colors.black,
+//       fillColor: Colors.lightBlue.shade900,
+//       children: <Widget>[
+//         Icon(Icons.ac_unit),
+//         Icon(Icons.call),
+//         // Icon(Icons.cake),
+//       ],
+//       onPressed: (int index) {
+//         setState(() {
+//           selections[index] = !selections[index];
+//         });
+//       },
+//     );
+//   }
+// }
