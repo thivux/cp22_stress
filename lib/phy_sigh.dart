@@ -15,10 +15,24 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _marginAnimation;
 
+
+  final _breathSound = AudioAssetPlayer('Breath.mp3');
+  late final StreamSubscription progressSubscription;
+  late final StreamSubscription stateSubscription;
+
+  double progress = 0.0;
+  PlayerState state = PlayerState.STOPPED;
+  late final Future initFuture;
+
   @override
   void initState() {
     super.initState();
-
+    initFuture = _breathSound.init().then((_) {
+      progressSubscription = _breathSound.progressStream
+          .listen((p) => setState(() => progress = p));
+      stateSubscription =
+          _breathSound.stateStream.listen((s) => setState(() => state = s));
+    });
     _controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 10));
 
@@ -54,6 +68,7 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
   void dispose() {
     super.dispose();
     _controller.dispose();
+    _breathSound.dispose();
   }
 
   Future<void> _playAnimation() async {
@@ -90,30 +105,6 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
             ),
           );
         });
-  }
-
-
-  final _breathSound = AudioAssetPlayer('Breath.mp3');
-  late final StreamSubscription progressSubscription;
-  late final StreamSubscription stateSubscription;
-
-  double progress = 0.0;
-  PlayerState state = PlayerState.STOPPED;
-  late final Future initFuture;
-
-  void initStateBreath() {
-    initFuture = _breathSound.init().then((_) {
-      progressSubscription = _breathSound.progressStream
-          .listen((p) => setState(() => progress = p));
-      stateSubscription =
-          _breathSound.stateStream.listen((s) => setState(() => state = s));
-    });
-    super.initState();
-  }
-
-  void disposeBreath() {
-    _breathSound.dispose();
-    super.dispose();
   }
 
   @override
@@ -165,7 +156,6 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
           );
         });
   }
-
 }
 
 class CircleBox extends StatelessWidget {
