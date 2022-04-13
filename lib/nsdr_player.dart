@@ -5,14 +5,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'audio_player.dart';
 
-void main() {
-  runApp(const MaterialApp(
-    home: NSDR(),
-  ));
-}
+// void main() {
+//   runApp(const MaterialApp(
+//     home: NSDR(),
+//   ));
+// }
 
 class NSDR extends StatefulWidget {
-  const NSDR({Key? key}) : super(key: key);
+  final String fileName;
+
+  // NSDR (this.fileName);
+
+  const NSDR({Key? key, required this.fileName}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -25,7 +29,8 @@ class NSDRState extends State<NSDR> {
   bool alarmOn = false;
   bool backgroundMusicOn = true;
 
-  final nsdrPlayer = AudioAssetPlayer('nsdr.mp3');
+  late final nsdrPlayer = AudioAssetPlayer(widget.fileName);
+
   AudioAssetPlayer alarmPlayer = AudioAssetPlayer('alarm.wav');
 
   // stuff need getting update: state & progress
@@ -64,7 +69,6 @@ class NSDRState extends State<NSDR> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -86,7 +90,7 @@ class NSDRState extends State<NSDR> {
                     Icons.close_rounded,
                     color: Colors.white70,
                   ),
-                  onPressed: null,
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ),
               FutureBuilder<void>(
@@ -136,18 +140,21 @@ class NSDRState extends State<NSDR> {
                           },
                           icon: Icon(
                             Icons.surround_sound_outlined,
-                            color: backgroundMusicOn ? Colors.white : Colors.white54,
+                            color: backgroundMusicOn
+                                ? Colors.white
+                                : Colors.white54,
                           ),
                         ),
                         Text(
                           "Nhạc nền",
                           style: TextStyle(
-                            color: backgroundMusicOn ? Colors.white : Colors.white54,
+                            color: backgroundMusicOn
+                                ? Colors.white
+                                : Colors.white54,
                           ),
                         ),
                       ],
                     ),
-
                     Column(
                       children: [
                         IconButton(
