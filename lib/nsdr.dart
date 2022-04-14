@@ -8,27 +8,99 @@ void main() {
 }
 
 class NSDRList extends StatelessWidget {
-  final List<String> items = ['Eng', 'Vie'];
-  final List<String> files = ['Entrelosdos.mp3', 'nsdr_adjusted_2.mp3'];
+  final List<String> items = ['Tiếng Anh, giọng nam, 20 phút', 'Tiếng Việt, giọng nữ, 20 phút'];
+  final List<String> fileNames = ['Entrelosdos.mp3', 'nsdr_adjusted_2.mp3'];
+  final List<String> imgs = ['forest.jpg', 'ocean.jpg'];
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text('${items[index]}'),
-            // When the child is tapped, show a snackbar.
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => NSDR(fileName: files[index])),
-              );
-            },
-          );
-        },
+      body: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 30, bottom: 10),
+              child: Text('Non-Sleep Deep Rest',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.black,
+                  fontSize: 25,
+                ),
+              ),
+            ),
+
+            Expanded(
+              child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                   onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NSDR(fileName: fileNames[index])),
+                    );},
+                    child: Container(
+                      margin: EdgeInsets.all(20),
+                      height: 150,
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset('assets/' + imgs[index],
+                              fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              height: 120,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                ),
+                                gradient: LinearGradient(
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                  colors: [
+                                    Colors.black.withOpacity(0.7),
+                                    Colors.transparent,
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            child: Container(
+                              // color: Colors.blue,    // uncomment to see the shape of container
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 19),
+                                child: Text(
+                                    items[index],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
