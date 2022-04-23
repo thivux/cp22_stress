@@ -54,4 +54,12 @@ class AudioAssetPlayer {
     await audioPlayer.stop();
     progressStreamController.add(0.0);
   }
+
+  Future<void> forward10s() {
+    return audioPlayer.seek(Duration(milliseconds: 10000));
+  }
+
+  Future<void> backward10s() {
+    return audioPlayer.seek(Duration(milliseconds: -10000));
+  }
 }

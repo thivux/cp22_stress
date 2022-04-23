@@ -8,8 +8,8 @@ void main() {
 }
 
 class NSDRList extends StatelessWidget {
-  final List<String> items = ['Tiếng Anh, giọng nam, 20 phút', 'Tiếng Việt, giọng nữ, 20 phút'];
-  final List<String> fileNames = ['Entrelosdos.mp3', 'nsdr_adjusted_2.mp3'];
+  final List<String> items = ['Tiếng Anh, giọng nam, 20\'', 'Tiếng Việt, giọng nữ, 20\''];
+  final List<String> fileNames = ['nsdr_eng_male_23min.mp3', 'nsdr_adjusted_2.mp3'];
   final List<String> imgs = ['forest.jpg', 'ocean.jpg'];
 
 

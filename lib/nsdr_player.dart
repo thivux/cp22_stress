@@ -1,15 +1,14 @@
 import 'dart:async';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'audio_player.dart';
 
-// void main() {
-//   runApp(const MaterialApp(
-//     home: NSDR(),
-//   ));
-// }
+void main() {
+  runApp(const MaterialApp(
+    home: NSDR(fileName: 'Entrelosdos.mp3'),
+  ));
+}
 
 class NSDR extends StatefulWidget {
   final String fileName;
@@ -27,11 +26,13 @@ class NSDR extends StatefulWidget {
 class NSDRState extends State<NSDR> {
   Color primaryColor = Color(0xff2f6f88);
   bool alarmOn = false;
-  bool backgroundMusicOn = true;
+  bool backgroundMusicOn = false;
 
   late final nsdrPlayer = AudioAssetPlayer(widget.fileName);
 
-  AudioAssetPlayer alarmPlayer = AudioAssetPlayer('alarm.wav');
+  AudioAssetPlayer alarmPlayer = AudioAssetPlayer('alarm_i_miss_u.mp3');
+  AudioAssetPlayer backgroundPlayer =
+      AudioAssetPlayer('30_min_background_music.mp3');
 
   // stuff need getting update: state & progress
   late final StreamSubscription progressSubscription;
@@ -46,6 +47,7 @@ class NSDRState extends State<NSDR> {
   void initState() {
     initFuture = nsdrPlayer.init().then((_) {
       alarmPlayer.init();
+      backgroundPlayer.init();
       progressSubscription =
           nsdrPlayer.progressStream.listen((p) => setState(() => progress = p));
       stateSubscription =
@@ -61,136 +63,148 @@ class NSDRState extends State<NSDR> {
     super.dispose();
   }
 
-  // AlarmSwitch alarmSwitch = AlarmSwitch();
-
-  // print('alarm being called');
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/background_1.jpg'),
-            fit: BoxFit.cover,
-            // opacity: 0.8,
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  iconSize: screenWidth / 10,
-                  icon: Icon(
-                    Icons.close_rounded,
-                    color: Colors.white70,
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
+      body: FutureBuilder<void>(
+          future: initFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Text('loading');
+            }
+
+            if (state == PlayerState.COMPLETED) {
+              print('completed');
+              if (alarmOn == true) {
+                alarmPlayer.play();
+              }
+            }
+
+            return Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/background_1.jpg'),
+                  fit: BoxFit.cover,
+                  // opacity: 0.8,
                 ),
               ),
-              FutureBuilder<void>(
-                future: initFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done) {
-                    return const Text('loading');
-                  }
-
-                  if (state == PlayerState.COMPLETED) {
-                    print('completed');
-                    if (alarmOn == true) {
-                      alarmPlayer.play();
-                    }
-                  }
-
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(32.0),
-                        child: LinearProgressIndicator(
-                          value: progress,
-                          backgroundColor: Colors.white24,
-                          color: primaryColor,
+              child: SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        iconSize: screenWidth / 10,
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: Colors.white,
                         ),
+                        onPressed: () => {
+                          Navigator.of(context).pop(),
+                        },
                       ),
-                      buildPlayOrPauseButton(screenWidth),
-                    ],
-                  );
-                },
-              ),
-              Container(
-                // color: Colors.red,   // uncomment to see shape of container
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
+                    ),
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        IconButton(
-                          iconSize: screenWidth / 10,
-                          onPressed: () {
-                            setState(() {
-                              backgroundMusicOn = !backgroundMusicOn;
-                            });
-                          },
-                          icon: Icon(
-                            Icons.surround_sound_outlined,
-                            color: backgroundMusicOn
-                                ? Colors.white
-                                : Colors.white54,
+                        Padding(
+                          padding: EdgeInsets.all(32.0),
+                          child: LinearProgressIndicator(
+                            value: progress,
+                            backgroundColor: Colors.white70,
+                            color: primaryColor,
                           ),
                         ),
-                        Text(
-                          "Nhạc nền",
-                          style: TextStyle(
-                            color: backgroundMusicOn
-                                ? Colors.white
-                                : Colors.white54,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            buildPlayOrPauseButton(screenWidth),
+                            buildReplayButton(screenWidth),
+                          ],
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        IconButton(
-                          iconSize: screenWidth / 10,
-                          onPressed: () {
-                            setState(() {
-                              alarmOn = !alarmOn;
-                            });
-                          },
-                          icon: Icon(
-                            Icons.alarm,
-                            color: alarmOn ? Colors.white : Colors.white54,
-                          ),
+                    Container(
+                      // color: Colors.red,   // uncomment to see shape of container
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Column(
+                              children: [
+                                IconButton(
+                                  iconSize: screenWidth / 10,
+                                  onPressed: () {
+                                    setState(() {
+                                      backgroundMusicOn
+                                          ? backgroundPlayer.pause()
+                                          : backgroundPlayer.play();
+                                      backgroundMusicOn = !backgroundMusicOn;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.surround_sound_outlined,
+                                    color: backgroundMusicOn
+                                        ? Colors.white
+                                        : Colors.white54,
+                                  ),
+                                ),
+                                Text(
+                                  "Nhạc nền",
+                                  style: TextStyle(
+                                    color: backgroundMusicOn
+                                        ? Colors.white
+                                        : Colors.white54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                IconButton(
+                                  iconSize: screenWidth / 10,
+                                  onPressed: () {
+                                    setState(() {
+                                      alarmOn = !alarmOn;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.alarm,
+                                    color:
+                                        alarmOn ? Colors.white : Colors.white54,
+                                  ),
+                                ),
+                                Text(
+                                  "Báo thức",
+                                  style: TextStyle(
+                                    color:
+                                        alarmOn ? Colors.white : Colors.white54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Báo thức",
-                          style: TextStyle(
-                            color: alarmOn ? Colors.white : Colors.white54,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            );
+          }),
     );
   }
 
   Widget buildPlayOrPauseButton(double screenWidth) {
     return IconButton(
         iconSize: screenWidth / 8,
-        color: Colors.white70,
+        color: Colors.white,
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
         icon: Icon(state == PlayerState.PLAYING
@@ -200,35 +214,16 @@ class NSDRState extends State<NSDR> {
           state == PlayerState.PLAYING ? nsdrPlayer.pause() : nsdrPlayer.play();
         });
   }
-}
 
-// class NSDRToggleButton extends StatefulWidget {
-//   @override
-//   State<StatefulWidget> createState() {
-//     return NSDRToggleButtonsState();
-//   }
-// }
-//
-// class NSDRToggleButtonsState extends State<NSDRToggleButton> {
-//   List<bool> selections = [false, false];
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ToggleButtons(
-//       isSelected: selections,
-//       selectedColor: Colors.white,
-//       color: Colors.black,
-//       fillColor: Colors.lightBlue.shade900,
-//       children: <Widget>[
-//         Icon(Icons.ac_unit),
-//         Icon(Icons.call),
-//         // Icon(Icons.cake),
-//       ],
-//       onPressed: (int index) {
-//         setState(() {
-//           selections[index] = !selections[index];
-//         });
-//       },
-//     );
-//   }
-// }
+  Widget buildReplayButton(double screenWidth) {
+    return IconButton(
+        iconSize: screenWidth / 10,
+        color: Colors.white,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        icon: Icon(Icons.replay_rounded),
+        onPressed: () {
+          nsdrPlayer.reset();
+        });
+  }
+}

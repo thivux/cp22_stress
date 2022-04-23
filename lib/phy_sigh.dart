@@ -96,10 +96,17 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
         builder: (BuildContext context, _) {
           return Scaffold(
             body: Container(
-              height: 500,
-              width: 500,
               child: Column(
                 children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Text('Phisiological Sigh',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.black,
+                        fontSize: 25,
+                      ),
+                    ),
+                  ),
                   CircleBox(marginAnimation: _marginAnimation),
                   ElevatedButton(
                       onPressed: () {
@@ -108,6 +115,7 @@ class BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
                       child: const Text('Bắt đầu'))
                 ],
                 mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.stretch,
               ),
             ),
             floatingActionButton: FloatingActionButton(
