@@ -55,4 +55,3 @@ class AlarmSwitchState extends State<AlarmSwitch> {
   }
 }
 
-void playAlarm() {}

@@ -38,10 +38,10 @@ class FirstPageApp extends StatelessWidget {
               tabs: myTabs,
             ),
           ),
-          body: const TabBarView(
+          body: TabBarView(
             children: [
               Bubble(),
-              NSDR(),
+              NSDRList(),
             ],
           ),
         ),
